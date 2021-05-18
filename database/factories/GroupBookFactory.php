@@ -1,0 +1,29 @@
+<?php
+
+namespace Database\Factories;
+
+use App\GroupBook;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class GroupBookFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = GroupBook::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'groupname_id'=>$this->faker->numberBetween(1, 6),
+            'book_id'=>$this->faker->numberBetween(1, 6),
+        ];
+    }
+}
