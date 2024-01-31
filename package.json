@@ -12,10 +12,17 @@
     "devDependencies": {
         "@babel/preset-react": "^7.12.1",
         "@types/js-cookie": "^2.2.6",
+<<<<<<< HEAD
         "axios": "^0.21.4",
         "cross-env": "^7.0",
         "laravel-mix": "^5.0.1",
         "lodash": "^4.17.21",
+=======
+        "axios": "^0.21.1",
+        "cross-env": "^7.0",
+        "laravel-mix": "^5.0.1",
+        "lodash": "^4.17.19",
+>>>>>>> 28f44ba2bc5a555b024f590a93af9be9562fffbc
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.15.2",
         "sass-loader": "^8.0.0",
@@ -34,7 +41,10 @@
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-router-dom": "^5.2.0",
+<<<<<<< HEAD
         "react-scripts": "^4.0.3",
+=======
+>>>>>>> 28f44ba2bc5a555b024f590a93af9be9562fffbc
         "react-scrollable-box": "^0.2.1"
     }
 }
