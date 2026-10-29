@@ -1,0 +1,54 @@
+# Зависимости
+/vendor
+/node_modules
+
+# Сборка фронтенда и симлинк storage
+/public/build
+/public/hot
+/public/storage
+/bootstrap/ssr
+/storage/pail
+/storage/*.key
+
+# Окружение и секреты
+.env
+.env.*
+!.env.example
+/auth.json
+Homestead.json
+Homestead.yaml
+
+# SQLite
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Локальный дамп с реальными персональными данными
+/libraryiatu.sql
+
+# Кеши тестов и инструментов
+.phpunit.result.cache
+.phpunit.cache
+.phpactor.json
+/.php-cs-fixer.cache
+
+# IDE
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Логи
+*.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+lerna-debug.log
+
+# ОС
+.DS_Store
+Thumbs.db
+desktop.ini
