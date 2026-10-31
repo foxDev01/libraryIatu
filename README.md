@@ -1,7 +1,5 @@
 # Библиотека для вуза
 
-[![CI](https://github.com/foxDev01/libraryIatu/actions/workflows/ci.yml/badge.svg)](https://github.com/foxDev01/libraryIatu/actions/workflows/ci.yml)
-
 Книги распределены по дисциплинам, а дисциплины — по группам.
 Каждому пользователю присваивается его группа, поэтому он видит только книги, которые нужны ему в процессе обучения.
 
@@ -44,7 +42,19 @@ php artisan serve
 
 > Для dev-режима нужны одновременно `npm run dev` и `php artisan serve`.
 
-## Полезные команды
+## Локальные проверки
+
+CI на GitHub Actions отключён: все проверки запускаются **локально перед каждым пушем в main**.
+Хук `pre-push` делает это автоматически:
+
+```bash
+git config core.hooksPath .githooks   # один раз после клонирования
+```
+
+Набор перед пушем: `composer lint` (Pint + PHPStan, уровень 6), `php artisan test`,
+`npm run lint`, `npm run typecheck`, `npm run build`.
+
+Вручную то же самое:
 
 ```bash
 npm run build          # production-сборка фронтенда
@@ -55,12 +65,6 @@ composer lint          # Pint (стиль PHP) + PHPStan (статический
 vendor/bin/pint        # авто-форматирование PHP
 php artisan route:list
 ```
-
-## CI
-
-На каждый push и pull request в `main` запускается `.github/workflows/ci.yml`:
-Pint, PHPStan (уровень 6), PHPUnit на SQLite `:memory:` (PHP 8.3 и 8.5),
-а для фронтенда — ESLint, `tsc --noEmit` и сборка Vite (Node 24).
 
 ## API
 

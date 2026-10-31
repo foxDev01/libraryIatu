@@ -13,21 +13,16 @@ class GroupTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_group_endpoint_returns_null_without_a_group(): void
+    public function test_group_endpoint_reports_the_users_group_name_or_null(): void
     {
         $user = User::factory()->create();
+        $groupName = GroupName::create(['groupname' => 'АИСТбд-21']);
+        $direction = Direction::create(['directionname' => 'Информационные технологии']);
 
         $this->actingAs($user)
             ->getJson('/api/groups')
             ->assertOk()
             ->assertExactJson(['groupname' => null]);
-    }
-
-    public function test_group_endpoint_returns_the_group_name(): void
-    {
-        $user = User::factory()->create();
-        $groupName = GroupName::create(['groupname' => 'АИСТбд-21']);
-        $direction = Direction::create(['directionname' => 'Информационные технологии']);
 
         Group::create([
             'user_id' => $user->id,

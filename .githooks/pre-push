@@ -1,0 +1,21 @@
+#!/bin/sh
+# Local gate for pushing to main: replaces the GitHub Actions pipeline.
+# Activate once per clone: git config core.hooksPath .githooks
+
+echo "==> Local checks before push (Pint, PHPStan, tests, ESLint, typecheck, build)"
+echo "--- composer lint"
+composer lint || exit 1
+
+echo "--- php artisan test"
+php artisan test || exit 1
+
+echo "--- npm run lint"
+npm run lint || exit 1
+
+echo "--- npm run typecheck"
+npm run typecheck || exit 1
+
+echo "--- npm run build"
+npm run build || exit 1
+
+echo "All local checks passed."

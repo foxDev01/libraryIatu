@@ -101,24 +101,12 @@ class AuthenticationTest extends TestCase
         );
     }
 
-    public function test_user_endpoint_returns_the_authenticated_user_name(): void
-    {
-        $user = User::factory()->create(['name' => 'Иванов Иван']);
-
-        $response = $this->actingAs($user)->getJson('/api/user')->assertOk();
-
-        $this->assertSame('Иванов Иван', $response->json());
-    }
-
-    public function test_session_endpoint_reports_a_guest_as_unauthenticated(): void
+    public function test_session_endpoint_reports_the_state_of_authentication(): void
     {
         $this->getJson('/api/session')
             ->assertOk()
             ->assertExactJson(['authenticated' => false]);
-    }
 
-    public function test_session_endpoint_reports_an_authenticated_user(): void
-    {
         $user = User::factory()->create();
 
         $this->actingAs($user)

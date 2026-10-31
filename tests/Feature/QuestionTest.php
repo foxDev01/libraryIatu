@@ -77,7 +77,7 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function test_a_user_cannot_update_a_question_of_another_user(): void
+    public function test_a_user_cannot_modify_a_question_of_another_user(): void
     {
         $owner = User::factory()->create();
         $other = User::factory()->create();
@@ -95,9 +95,14 @@ class QuestionTest extends TestCase
             ])
             ->assertNotFound();
 
+        $this->actingAs($other)
+            ->deleteJson("/api/questions/{$question->id}")
+            ->assertNotFound();
+
         $this->assertDatabaseHas('questions', [
             'id' => $question->id,
             'title' => 'Чужой вопрос',
+            'content' => 'Чужой текст',
         ]);
     }
 
@@ -130,24 +135,6 @@ class QuestionTest extends TestCase
             ->assertNoContent();
 
         $this->assertDatabaseMissing('questions', ['id' => $question->id]);
-    }
-
-    public function test_a_user_cannot_delete_a_question_of_another_user(): void
-    {
-        $owner = User::factory()->create();
-        $other = User::factory()->create();
-
-        $question = Question::create([
-            'title' => 'Чужой вопрос',
-            'content' => 'Чужой текст',
-            'user_id' => $owner->id,
-        ]);
-
-        $this->actingAs($other)
-            ->deleteJson("/api/questions/{$question->id}")
-            ->assertNotFound();
-
-        $this->assertDatabaseHas('questions', ['id' => $question->id]);
     }
 
     public function test_questions_cannot_be_created_with_a_get_request(): void

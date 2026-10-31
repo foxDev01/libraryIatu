@@ -15,11 +15,6 @@ class BookTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_books_endpoint_requires_authentication(): void
-    {
-        $this->getJson('/api/books')->assertUnauthorized();
-    }
-
     public function test_books_endpoint_returns_books_of_the_users_group(): void
     {
         $user = User::factory()->create();
@@ -39,6 +34,8 @@ class BookTest extends TestCase
             'type_id' => $type->id,
         ]);
         $groupName->books()->attach($book);
+
+        $this->getJson('/api/books')->assertUnauthorized();
 
         $this->actingAs($user)
             ->getJson('/api/books')
