@@ -11,6 +11,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "filament/filament": "^5.11",
         "laravel/fortify": "^1.41",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.3",
@@ -62,7 +63,8 @@
         "analyse-phpstan": "@php vendor/bin/phpstan analyse --memory-limit=1G --no-progress",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

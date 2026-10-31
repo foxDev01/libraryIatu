@@ -34,7 +34,9 @@ npm run build        # сборка фронтенда
 
 ## Стек и конвенции
 
-- PHP 8.5, Laravel 13, SQLite; React 17 + TypeScript (MUI 4), Vite 7.
+- PHP 8.5, Laravel 13, SQLite; React 19 + TypeScript (MUI 9), Vite 7.
+- Админ-панель Filament v5 на `/admin`: только пользователи с `is_admin = 1`
+  (`User::canAccessPanel()`, команда `php artisan app:make-admin email`).
 - Локаль по умолчанию `ru`: ошибки валидации и UI-сообщения — на русском.
 - API: GET только для чтения, изменения через `POST` / `PUT` / `DELETE` (CSRF-защита SPA Sanctum).
 - Не коммитить: `libraryiatu.sql` (персональные данные!), `.env`, `database/*.sqlite`,
