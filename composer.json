@@ -22,6 +22,7 @@
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
+        "nunomaduro/larastan": "^3.13",
         "phpunit/phpunit": "^12.5"
     },
     "autoload": {
@@ -53,6 +54,12 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "lint": [
+            "@pint --test",
+            "@analyse-phpstan"
+        ],
+        "pint": "@php vendor/bin/pint",
+        "analyse-phpstan": "@php vendor/bin/phpstan analyse --memory-limit=1G --no-progress",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,13 +11,15 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -27,7 +30,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -44,11 +47,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /** @return HasOne<Group, $this> */
     public function group(): HasOne
     {
         return $this->hasOne(Group::class, 'user_id');
     }
 
+    /** @return HasMany<Question, $this> */
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class);

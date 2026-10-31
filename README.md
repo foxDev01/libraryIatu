@@ -1,5 +1,7 @@
 # Библиотека для вуза
 
+[![CI](https://github.com/foxDev01/libraryIatu/actions/workflows/ci.yml/badge.svg)](https://github.com/foxDev01/libraryIatu/actions/workflows/ci.yml)
+
 Книги распределены по дисциплинам, а дисциплины — по группам.
 Каждому пользователю присваивается его группа, поэтому он видит только книги, которые нужны ему в процессе обучения.
 
@@ -47,11 +49,18 @@ php artisan serve
 ```bash
 npm run build          # production-сборка фронтенда
 npm run typecheck      # проверка TypeScript
+npm run lint           # ESLint (JS/TS)
 php artisan test       # тесты
-vendor/bin/pint        # форматирование PHP
-vendor/bin/pint --test # проверка стиля без изменений
+composer lint          # Pint (стиль PHP) + PHPStan (статический анализ)
+vendor/bin/pint        # авто-форматирование PHP
 php artisan route:list
 ```
+
+## CI
+
+На каждый push и pull request в `main` запускается `.github/workflows/ci.yml`:
+Pint, PHPStan (уровень 6), PHPUnit на SQLite `:memory:` (PHP 8.3 и 8.5),
+а для фронтенда — ESLint, `tsc --noEmit` и сборка Vite (Node 24).
 
 ## API
 

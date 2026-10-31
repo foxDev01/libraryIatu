@@ -1,6 +1,6 @@
 interface IRoutesProps {
     auth: boolean;
-    setAuth: (auth: boolean) => void;
+    setAuth: (_auth: boolean) => void;
 }
 
 export default IRoutesProps;

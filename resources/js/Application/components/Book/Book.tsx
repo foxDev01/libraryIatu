@@ -1,13 +1,12 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import IIdeaProps from '../../interfaces/BooksProps';
 
-const useStyles = makeStyles((theme: Theme) =>
-createStyles({
+const useStyles = makeStyles({
     root: {
         minWidth: 150,
         margin: 5,
@@ -15,7 +14,7 @@ createStyles({
     title: {
         fontSize: 18,
     },
-}));
+});
 
 export default function Book(props: IIdeaProps) {
     const classes = useStyles();
