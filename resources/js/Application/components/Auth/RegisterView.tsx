@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +17,11 @@ import useStyles from './includes/styles';
 import IRegisterViewProps from '../../interfaces/IRegisterViewProps';
 import apiErrorMessage from '../../apiError';
 
+interface GroupNameOption {
+    id: number;
+    groupname: string;
+}
+
 const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) => {
     const classes = useStyles();
 
@@ -23,12 +29,40 @@ const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
+    const [groups, setGroups] = useState<GroupNameOption[]>([]);
+    const [groupNameId, setGroupNameId] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        axios.get<GroupNameOption[]>('/api/group-names')
+            .then((response) => {
+                if (!cancelled) {
+                    setGroups(response.data);
+                }
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setGroups([]);
+                    setError('Не удалось загрузить список групп.');
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setError(null);
+
+        if (!groupNameId) {
+            setError('Выберите группу.');
+            return;
+        }
 
         if (password !== passwordConfirmation) {
             setError('Пароли не совпадают.');
@@ -43,6 +77,7 @@ const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) 
                 email: email,
                 password: password,
                 password_confirmation: passwordConfirmation,
+                group_name_id: Number(groupNameId),
             }))
             .then(() => {
                 setAuth(true);
@@ -96,6 +131,24 @@ const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) 
                         value={email}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
                     />
+                    <TextField
+                        select
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="group_name_id"
+                        label="Группа"
+                        name="group_name_id"
+                        value={groupNameId}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setGroupNameId(event.target.value)}
+                    >
+                        {groups.map((group) => (
+                            <MenuItem key={group.id} value={String(group.id)}>
+                                {group.groupname}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                     <TextField
                         variant="outlined"
                         margin="normal"

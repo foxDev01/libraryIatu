@@ -24,6 +24,10 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Routes are registered manually in routes/api.php so that we can
+        // apply fine-grained throttling to login and registration.
+        Fortify::ignoreRoutes();
+
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

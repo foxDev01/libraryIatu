@@ -61,8 +61,9 @@ php artisan route:list
 | Метод | URL | Назначение |
 |-------|-----|------------|
 | `GET` | `/api/session` | Проверка статуса сессии |
+| `GET` | `/api/group-names` | Список групп для формы регистрации |
 | `POST` | `/api/login` | Вход |
-| `POST` | `/api/register` | Регистрация |
+| `POST` | `/api/register` | Регистрация (требует `group_name_id`) |
 | `POST` | `/api/logout` | Выход |
 | `GET` | `/api/user` | Имя текущего пользователя |
 | `GET` | `/api/groups` | Группа пользователя |

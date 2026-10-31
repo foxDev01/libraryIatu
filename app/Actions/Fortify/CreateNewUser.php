@@ -29,12 +29,27 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'group_name_id' => [
+                'required',
+                Rule::exists('group_names', 'id'),
+            ],
+        ], [
+            'group_name_id.required' => 'Выберите группу.',
+            'group_name_id.exists' => 'Выбранная группа не найдена.',
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        // Users can only see the books of their own study group,
+        // so a group is assigned during registration.
+        $user->group()->create([
+            'groupname_id' => $input['group_name_id'],
+        ]);
+
+        return $user;
     }
 }
