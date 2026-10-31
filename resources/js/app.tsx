@@ -1,9 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 import axios from 'axios';
 
-import App from './Application/App';
+import { createAppRouter } from './Application/components/Routes';
 
 /**
  * Configure axios for Laravel Sanctum's cookie based SPA authentication.
@@ -13,9 +13,10 @@ import App from './Application/App';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
-    document.getElementById('root'),
-);
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+    throw new Error('Root element #root is missing');
+}
+
+createRoot(rootElement).render(<RouterProvider router={createAppRouter()} />);

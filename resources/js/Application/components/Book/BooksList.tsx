@@ -1,13 +1,16 @@
 import React from 'react';
-import IIdeasListProps from '../../interfaces/BooksListProps';
-import Book from './Book';
+import Box from '@mui/material/Box';
+import { Book } from '../../types';
+import BookCard from './Book';
 
-export default function BooksList(props: IIdeasListProps) {
+const BooksList: React.FC<{ books: Book[] }> = ({ books }) => {
     return (
-        <div style={{ maxHeight: '100%', overflow: 'auto', flexGrow: 1 }}>
-            {props.books.map(({ id, bookname, link }) => (
-                <Book key={id} id={id} bookname={bookname} link={link} />
+        <Box sx={{ maxHeight: '100%', overflow: 'auto', flexGrow: 1 }}>
+            {books.map(({ id, bookname, link }) => (
+                <BookCard key={id} id={id} bookname={bookname} link={link} />
             ))}
-        </div>
+        </Box>
     );
-}
+};
+
+export default BooksList;

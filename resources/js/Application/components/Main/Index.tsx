@@ -1,22 +1,30 @@
 import React from 'react';
-import clsx from 'clsx';
+import { Box } from '@mui/material';
 
-import useStyles from "./includes/style";
-import IindexPageProps from '../../interfaces/IindexPageProps';
+const drawerWidth = 240;
 
-const Index: React.FC<IindexPageProps> = ({ open, children }) => {
-    const classes = useStyles();
-
+const Index: React.FC<{ open: boolean; children: React.ReactNode }> = ({ open, children }) => {
     return (
-        <div className={classes.grow}>
-            <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: open,
-                })}
+        <Box sx={{ flexGrow: 1 }}>
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    ml: open ? `${drawerWidth}px` : 0,
+                    transition: (transitionTheme) => transitionTheme.transitions.create('margin', {
+                        easing: open
+                            ? transitionTheme.transitions.easing.easeOut
+                            : transitionTheme.transitions.easing.sharp,
+                        duration: open
+                            ? transitionTheme.transitions.duration.enteringScreen
+                            : transitionTheme.transitions.duration.leavingScreen,
+                    }),
+                }}
             >
                 {children}
-            </main>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

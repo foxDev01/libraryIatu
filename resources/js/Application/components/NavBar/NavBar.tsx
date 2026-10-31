@@ -1,34 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { useTheme } from '@material-ui/core/styles';
+import axios from 'axios';
+import { NavLink, useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import PersonIcon from '@mui/icons-material/Person';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import {
     AppBar,
+    Box,
     Divider,
     Drawer,
     IconButton,
     List,
     ListItem,
+    ListItemButton,
     ListItemIcon,
     ListItemText,
     Menu,
     MenuItem,
     Toolbar,
     Typography,
-} from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import { NavLink, withRouter } from 'react-router-dom';
-import axios from 'axios';
+    useTheme,
+} from '@mui/material';
 
-import useStyles from './includes/style';
-import INavbarProps from '../../interfaces/INavbarProps';
+import { useSession } from '../../session';
 
-const NavBar: React.FC<INavbarProps> = ({ open, handleDrawer, auth, setAuth, history }) => {
-    const classes = useStyles();
+interface NavBarProps {
+    open: boolean;
+    onToggleDrawer: () => void;
+}
+
+interface NavItem {
+    title: string;
+    url?: string;
+    icon: React.ReactNode;
+}
+
+const drawerWidth = 240;
+
+const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
     const theme = useTheme();
-
+    const navigate = useNavigate();
+    const { auth, setAuth } = useSession();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [group, setGroup] = useState<string | null>(null);
     const [user, setUser] = useState<string>('');
@@ -83,42 +101,57 @@ const NavBar: React.FC<INavbarProps> = ({ open, handleDrawer, auth, setAuth, his
             .catch(() => undefined)
             .finally(() => {
                 setAuth(false);
-                history.push('/login');
+                navigate('/login');
             });
     };
 
-    const navItems = [
-        { title: user || 'Профиль', url: '/', icon: 'person' },
-        { title: 'О сервисе', url: '/about', icon: 'info' },
-        { title: 'Помощь', url: '/support', icon: 'support' },
-        { title: 'Задать вопрос', url: '/add_new', icon: 'help' },
+    const navItems: NavItem[] = [
+        { title: user || 'Профиль', url: '/', icon: <PersonIcon /> },
+        { title: 'О сервисе', url: '/about', icon: <InfoOutlinedIcon /> },
+        { title: 'Помощь', url: '/support', icon: <SupportAgentOutlinedIcon /> },
+        { title: 'Задать вопрос', url: '/add_new', icon: <HelpOutlineOutlinedIcon /> },
     ];
 
     return (
         <>
             <AppBar
                 position="static"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}
+                sx={{
+                    transition: (transitionTheme) => transitionTheme.transitions.create(['margin', 'width'], {
+                        easing: open
+                            ? transitionTheme.transitions.easing.easeOut
+                            : transitionTheme.transitions.easing.sharp,
+                        duration: open
+                            ? transitionTheme.transitions.duration.enteringScreen
+                            : transitionTheme.transitions.duration.leavingScreen,
+                    }),
+                    ...(open ? {
+                        width: `calc(100% - ${drawerWidth}px)`,
+                        ml: `${drawerWidth}px`,
+                    } : {}),
+                }}
             >
                 <Toolbar>
                     <IconButton
-                        onClick={handleDrawer}
+                        onClick={onToggleDrawer}
                         edge="start"
-                        className={classes.menuButton}
+                        sx={{ mr: 2 }}
                         color="inherit"
                         aria-label="Открыть меню"
                     >
-                        <Icon>menu</Icon>
+                        <MenuIcon />
                     </IconButton>
-                    <Typography className={classes.title} variant="h6" noWrap>
+                    <Typography
+                        sx={{ display: 'none', sm: { display: 'block' } }}
+                        variant="h6"
+                        noWrap
+                    >
                         Библиотека института ГРУППА : {group ?? '—'}
                     </Typography>
 
-                    <div className={classes.grow} />
+                    <Box sx={{ flexGrow: 1 }} />
 
-                    <div className={classes.sectionDesktop}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         {auth ? (
                             <IconButton
                                 edge="end"
@@ -127,48 +160,55 @@ const NavBar: React.FC<INavbarProps> = ({ open, handleDrawer, auth, setAuth, his
                                 onClick={handleProfileMenuOpen}
                                 color="inherit"
                             >
-                                <AccountCircle />
+                                <AccountCircleIcon />
                             </IconButton>
                         ) : null}
-                    </div>
+                    </Box>
                 </Toolbar>
             </AppBar>
 
             <Drawer
-                className={classes.drawer}
+                sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth } }}
                 variant="persistent"
                 anchor="left"
                 open={open}
-                classes={{ paper: classes.drawerPaper }}
             >
-                <div className={classes.drawerHeader}>
-                    <IconButton onClick={handleDrawer} aria-label="Закрыть меню">
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        ...theme.mixins.toolbar,
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    <IconButton onClick={onToggleDrawer} aria-label="Закрыть меню">
                         {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
-                </div>
+                </Box>
                 <Divider />
 
                 <List>
                     {navItems.map((item) => (
-                        <ListItem button key={item.url}>
-                            <ListItemIcon>
-                                <Icon color="primary">{item.icon}</Icon>
-                            </ListItemIcon>
-                            <NavLink
-                                exact
-                                to={item.url}
-                                style={{ color: '#05c3fc', fontWeight: 'normal' }}
-                                activeStyle={{ color: '#0080FF', fontWeight: 'bold' }}
-                            >
-                                <ListItemText primary={item.title} />
-                            </NavLink>
+                        <ListItem key={item.url} disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>{item.icon}</ListItemIcon>
+                                <NavLink
+                                    to={item.url ?? '/'}
+                                    style={({ isActive }: { isActive: boolean }) => ({
+                                        color: isActive ? '#0080FF' : '#05c3fc',
+                                        fontWeight: isActive ? 'bold' : 'normal',
+                                    })}
+                                >
+                                    <ListItemText primary={item.title} />
+                                </NavLink>
+                            </ListItemButton>
                         </ListItem>
                     ))}
 
                     {disciplines.map((discipline) => (
                         <ListItem key={discipline}>
                             <ListItemIcon>
-                                <Icon color="primary">book</Icon>
+                                <MenuBookOutlinedIcon color="primary" />
                             </ListItemIcon>
                             <ListItemText primary={discipline} />
                         </ListItem>
@@ -192,4 +232,4 @@ const NavBar: React.FC<INavbarProps> = ({ open, handleDrawer, auth, setAuth, his
     );
 };
 
-export default withRouter(NavBar);
+export default NavBar;

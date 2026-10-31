@@ -1,10 +1,11 @@
 import React from 'react';
-import IIdeasListProps from '../../interfaces/SupportListProps';
+import Box from '@mui/material/Box';
+import { Question } from '../../types';
 import Support from './Support';
 
-const SupportList: React.FC<IIdeasListProps> = ({ questions, onChanged }) => {
+const SupportList: React.FC<{ questions: Question[]; onChanged: () => void }> = ({ questions, onChanged }) => {
     return (
-        <div style={{ maxHeight: '100%', overflow: 'auto', flexGrow: 1 }}>
+        <Box sx={{ maxHeight: '100%', overflow: 'auto', flexGrow: 1 }}>
             {questions.map((question) => (
                 <Support
                     key={question.id}
@@ -14,7 +15,7 @@ const SupportList: React.FC<IIdeasListProps> = ({ questions, onChanged }) => {
                     onChanged={onChanged}
                 />
             ))}
-        </div>
+        </Box>
     );
 };
 

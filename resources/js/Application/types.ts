@@ -13,3 +13,8 @@ export interface Question {
     created_at?: string;
     updated_at?: string;
 }
+
+export interface GroupNameOption {
+    id: number;
+    groupname: string;
+}

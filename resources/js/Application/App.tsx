@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Outlet } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import Index from "./components/Main/Index";
-import NavBar from "./components/NavBar/NavBar";
-import Routes from './components/Routes';
+import NavBar from './components/NavBar/NavBar';
+import Index from './components/Main/Index';
+import { SessionProvider } from './session';
 
 const App: React.FC = () => {
   // null means "session status is still being checked".
@@ -31,27 +33,26 @@ const App: React.FC = () => {
     };
   }, []);
 
-  const handleDrawer = () => {
-    setOpen(!open);
-  };
-
   if (auth === null) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <CircularProgress />
-      </div>
+      </Box>
     );
   }
 
+  const context = {
+    auth: auth,
+    setAuth: (value: boolean) => setAuth(value),
+  };
+
   return (
-    <>
-      {auth
-        ? <NavBar open={open} setAuth={setAuth} auth={auth} handleDrawer={handleDrawer} />
-        : null}
+    <SessionProvider value={context}>
+      {auth ? <NavBar open={open} onToggleDrawer={() => setOpen(!open)} /> : null}
       <Index open={open}>
-        <Routes auth={auth} setAuth={setAuth} />
+        <Outlet />
       </Index>
-    </>
+    </SessionProvider>
   );
 };
 

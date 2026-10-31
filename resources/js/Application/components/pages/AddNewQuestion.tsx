@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddNewQuestion() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const started = useRef<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -15,9 +15,9 @@ export default function AddNewQuestion() {
         started.current = true;
 
         axios.post('/api/questions')
-            .then(() => history.replace('/support'))
+            .then(() => navigate('/support', { replace: true }))
             .catch(() => setError('Не удалось создать вопрос. Попробуйте ещё раз.'));
-    }, [history]);
+    }, [navigate]);
 
     if (error) {
         return <p role="alert">{error}</p>;

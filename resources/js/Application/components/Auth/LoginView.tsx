@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import { NavLink, Redirect, withRouter } from 'react-router-dom';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Copyright from './includes/Copyright';
-import useStyles from './includes/styles';
-import ILoginViewProps from '../../interfaces/ILoginViewProps';
 import apiErrorMessage from '../../apiError';
+import { useSession } from '../../session';
 
-const LoginView: React.FC<ILoginViewProps> = ({ auth, setAuth, history }) => {
-    const classes = useStyles();
+const LoginView: React.FC = () => {
+    const { auth, setAuth } = useSession();
+    const navigate = useNavigate();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [remember, setRemember] = useState<boolean>(false);
@@ -39,7 +38,7 @@ const LoginView: React.FC<ILoginViewProps> = ({ auth, setAuth, history }) => {
             }))
             .then(() => {
                 setAuth(true);
-                history.push('/');
+                navigate('/');
             })
             .catch((requestError: unknown) => {
                 setError(apiErrorMessage(requestError, 'Не удалось войти. Проверьте email и пароль.'));
@@ -50,20 +49,20 @@ const LoginView: React.FC<ILoginViewProps> = ({ auth, setAuth, history }) => {
     }
 
     if (auth) {
-        return <Redirect to="/" />;
+        return <Navigate to="/" replace />;
     }
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
+            <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Вход
                 </Typography>
-                <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                <Box component="form" sx={{ width: '100%', mt: 1 }} noValidate onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -111,26 +110,23 @@ const LoginView: React.FC<ILoginViewProps> = ({ auth, setAuth, history }) => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
-                        className={classes.submit}
+                        sx={{ mt: 3, mb: 2 }}
                         disabled={loading}
                     >
                         {loading ? 'Входим…' : 'Войти'}
                     </Button>
-                    <Grid container>
-                        <Grid item>
-                            <NavLink to="/register">
-                                Нет аккаунта? Зарегистрироваться
-                            </NavLink>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
+                    <Box sx={{ display: 'flex' }}>
+                        <NavLink to="/register">
+                            Нет аккаунта? Зарегистрироваться
+                        </NavLink>
+                    </Box>
+                </Box>
+            </Box>
+            <Box sx={{ mt: 8 }}>
                 <Copyright />
             </Box>
         </Container>
     );
 };
 
-export default withRouter(LoginView);
+export default LoginView;

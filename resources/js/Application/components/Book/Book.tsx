@@ -1,28 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { Book } from '../../types';
 
-import IIdeaProps from '../../interfaces/BooksProps';
-
-const useStyles = makeStyles({
-    root: {
-        minWidth: 150,
-        margin: 5,
-    },
-    title: {
-        fontSize: 18,
-    },
-});
-
-export default function Book(props: IIdeaProps) {
-    const classes = useStyles();
-
+const Book: React.FC<Book> = (props) => {
     return (
-        <Card className={classes.root} style={{ backgroundColor: '#FFFFFF' }}>
+        <Card sx={{ minWidth: 150, m: '5px', bgcolor: '#FFFFFF' }} data-book-id={props.id}>
             <CardContent>
-                <Typography className={classes.title} color="textPrimary" variant="h3" align="left">
+                <Typography color="textPrimary" variant="h3" sx={{ fontSize: 18 }} align="left">
                     {props.bookname}
                 </Typography>
                 <Typography variant="body2" component="p" align="left">
@@ -33,4 +19,6 @@ export default function Book(props: IIdeaProps) {
             </CardContent>
         </Card>
     );
-}
+};
+
+export default Book;

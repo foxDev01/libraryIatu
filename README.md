@@ -18,7 +18,8 @@
 - PHP 8.5, Laravel 13
 - SQLite (файл `database/database.sqlite`)
 - Laravel Fortify + Sanctum (аутентификация SPA)
-- React 17 + TypeScript + Material UI 4
+- React 19 + TypeScript + Material UI 9 (`@mui/material`)
+- React Router 7 (`createBrowserRouter`, code splitting страниц)
 - Vite 7
 - PHPUnit 12, Laravel Pint
 

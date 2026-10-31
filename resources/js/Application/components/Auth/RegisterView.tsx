@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import { NavLink, Redirect, withRouter } from 'react-router-dom';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Copyright from './includes/Copyright';
-import useStyles from './includes/styles';
-import IRegisterViewProps from '../../interfaces/IRegisterViewProps';
 import apiErrorMessage from '../../apiError';
+import { useSession } from '../../session';
+import { GroupNameOption } from '../../types';
 
-interface GroupNameOption {
-    id: number;
-    groupname: string;
-}
-
-const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) => {
-    const classes = useStyles();
-
+const RegisterView: React.FC = () => {
+    const { auth, setAuth } = useSession();
+    const navigate = useNavigate();
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -81,7 +75,7 @@ const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) 
             }))
             .then(() => {
                 setAuth(true);
-                history.push('/');
+                navigate('/');
             })
             .catch((requestError: unknown) => {
                 setError(apiErrorMessage(requestError, 'Не удалось зарегистрироваться.'));
@@ -92,20 +86,20 @@ const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) 
     }
 
     if (auth) {
-        return <Redirect to="/" />;
+        return <Navigate to="/" replace />;
     }
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
+            <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Регистрация
                 </Typography>
-                <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                <Box component="form" sx={{ width: '100%', mt: 1 }} noValidate onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -185,26 +179,23 @@ const RegisterView: React.FC<IRegisterViewProps> = ({ auth, setAuth, history }) 
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
-                        className={classes.submit}
+                        sx={{ mt: 3, mb: 2 }}
                         disabled={loading}
                     >
                         {loading ? 'Регистрируем…' : 'Зарегистрироваться'}
                     </Button>
-                    <Grid container>
-                        <Grid item>
-                            <NavLink to="/login">
-                                Уже есть аккаунт? Войти
-                            </NavLink>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
+                    <Box sx={{ display: 'flex' }}>
+                        <NavLink to="/login">
+                            Уже есть аккаунт? Войти
+                        </NavLink>
+                    </Box>
+                </Box>
+            </Box>
+            <Box sx={{ mt: 8 }}>
                 <Copyright />
             </Box>
         </Container>
     );
 };
 
-export default withRouter(RegisterView);
+export default RegisterView;
