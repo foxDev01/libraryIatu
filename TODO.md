@@ -37,8 +37,10 @@
 
 - [ ] Заголовки безопасности при деплое: CSP для SPA (emotion вставляет inline-стили),
       `X-Frame-Options`, HSTS на reverse-proxy.
-- [ ] Следить за advisories Filament (v4.x имел уязвимости, используем свежую 5.11+) и
-      обновлять зависимости (`composer audit`, npm audit).
+- [ ] Следить за advisories зависимостей (`composer audit`, `npm audit`): в Filament 4.x были
+      уязвимости, используем свежую 5.11+. В dev-цепочке ESLint висят moderate-предупреждения
+      `minimatch` (<11), их исправление ждёт поддержки ESLint 10 в плагинах (`eslint-plugin-react`,
+      `eslint-plugin-react-refresh`, `typescript-eslint`); на прод-сборку это не влияет.
 - [ ] Тестовый аккаунт `test@example.com` сейчас ещё и админ — при настройке production
       завести отдельного админа и забрать права у тестового.
 - [ ] После свежего клона не забыть `git config core.hooksPath .githooks` и `php artisan storage:link`.
