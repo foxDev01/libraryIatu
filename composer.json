@@ -9,6 +9,12 @@
         "react"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "foxDev01",
+            "homepage": "https://github.com/foxDev01/libraryIatu"
+        }
+    ],
     "require": {
         "php": "^8.3",
         "filament/filament": "^5.11",
