@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Book;
+use App\Http\Resources\BookResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class BookController extends Controller
 {
@@ -17,10 +21,56 @@ class BookController extends Controller
             ->with('groupname.books')
             ->first();
 
-        if (! $group || ! $group->groupname) {
+        if ($group === null || $group->groupname === null) {
             return response()->json([]);
         }
 
-        return response()->json($group->groupname->books->values());
+        $books = BookResource::collection($group->groupname->books->values())->resolve($request);
+
+        return response()->json($books);
+    }
+
+    /**
+     * Отдать файл книги либо перенаправить на внешнюю ссылку.
+     *
+     * Скачивать можно только те книги, которые закреплены за учебной группой
+     * пользователя, — файл лежит на приватном диске и напрямую недоступен.
+     */
+    public function download(Request $request, int $id): Response
+    {
+        $book = Book::query()->findOrFail($id);
+
+        abort_unless($this->isAvailableForUser($book, $request), 403, 'Книга недоступна для вашей группы.');
+
+        if ($book->hasFile()) {
+            /** @var string $path */
+            $path = $book->file_path;
+            $disk = Storage::disk(Book::FILE_DISK);
+
+            abort_unless($disk->exists($path), 404, 'Файл книги не найден на сервере.');
+
+            return $disk->download($path, $book->downloadFileName());
+        }
+
+        if ($book->link !== null && $book->link !== '') {
+            return redirect()->away($book->link);
+        }
+
+        return response()->json(['message' => 'У книги нет ни файла, ни ссылки.'], 404);
+    }
+
+    /**
+     * Закреплена ли книга за учебной группой пользователя.
+     */
+    private function isAvailableForUser(Book $book, Request $request): bool
+    {
+        /** @var int|string|null $groupNameId */
+        $groupNameId = $request->user()->group()->value('groupname_id');
+
+        if ($groupNameId === null) {
+            return false;
+        }
+
+        return $book->groupNames()->whereKey((int) $groupNameId)->exists();
     }
 }

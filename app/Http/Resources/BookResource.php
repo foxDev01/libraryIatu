@@ -7,25 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property Book $resource
- * @property int $id
- * @property string $bookname
- * @property string $link
+ * @mixin Book
  */
 class BookResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Публичное представление книги для SPA.
      *
-     * @param  Request  $request
-     * @return array{id: int, bookname: string, link: string}
+     * Внутренний путь файла (file_path) наружу не отдаём: скачивание идёт
+     * через GET /api/books/{id}/download с проверкой группы.
+     *
+     * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'bookname' => $this->bookname,
             'link' => $this->link,
+            'type_id' => $this->type_id,
+            'has_file' => $this->hasFile(),
         ];
     }
 }

@@ -57,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('groups', [GroupController::class, 'group_by_id']);
     Route::get('disciplines', [DisciplineController::class, 'disciplines']);
     Route::get('books', [BookController::class, 'book_by_group_id']);
+    Route::get('books/{id}/download', [BookController::class, 'download'])
+        ->whereNumber('id')
+        ->middleware('throttle:60,1');
 
     Route::get('questions', [QuestionController::class, 'index']);
     Route::post('questions', [QuestionController::class, 'store'])

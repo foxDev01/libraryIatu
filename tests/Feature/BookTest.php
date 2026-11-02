@@ -37,11 +37,15 @@ class BookTest extends TestCase
 
         $this->getJson('/api/books')->assertUnauthorized();
 
-        $this->actingAs($user)
+        $response = $this->actingAs($user)
             ->getJson('/api/books')
             ->assertOk()
             ->assertJsonCount(1)
             ->assertJsonFragment(['bookname' => 'Базы данных']);
+
+        // Внутренний путь файла наружу не отдаётся, есть файл — показывает has_file.
+        $this->assertFalse($response->json('0.has_file'));
+        $this->assertNull($response->json('0.file_path'));
     }
 
     public function test_books_endpoint_returns_empty_list_without_a_group(): void

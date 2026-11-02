@@ -23,8 +23,13 @@ class BooksTable
                 TextColumn::make('type.typenames')
                     ->label('Тип')
                     ->sortable(),
+                TextColumn::make('file_path')
+                    ->label('Хранение')
+                    ->formatStateUsing(fn (?string $state): string => filled($state) ? 'файл на сервере' : 'внешняя ссылка')
+                    ->sortable(),
                 TextColumn::make('link')
                     ->label('Ссылка')
+                    ->placeholder('—')
                     ->limit(40),
             ])
             ->recordActions([

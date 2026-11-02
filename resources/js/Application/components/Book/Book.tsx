@@ -9,10 +9,15 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import { Book } from '../../types';
 
 const Book: React.FC<Book> = (props) => {
+    const { id, bookname, link, has_file: hasFile } = props;
+
+    // Файлы отдаёт наш контроллер (проверяет группу), внешние ссылки — напрямую.
+    const href = hasFile ? `/api/books/${id}/download` : link;
+
     return (
         <Card
             variant="outlined"
-            data-book-id={props.id}
+            data-book-id={id}
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -26,21 +31,33 @@ const Book: React.FC<Book> = (props) => {
         >
             <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 600 }}>
-                    {props.bookname}
+                    {bookname}
                 </Typography>
             </CardContent>
-            <CardActions sx={{ px: 2, pb: 2 }}>
-                <Button
-                    size="small"
-                    variant="outlined"
-                    component="a"
-                    href={props.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    endIcon={<DownloadOutlinedIcon />}
-                >
-                    Скачать
-                </Button>
+            <CardActions sx={{ px: 2, pb: 2, gap: 1 }}>
+                {href ? (
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        component="a"
+                        href={href}
+                        target={hasFile ? undefined : '_blank'}
+                        rel={hasFile ? undefined : 'noopener noreferrer'}
+                        endIcon={<DownloadOutlinedIcon />}
+                    >
+                        Скачать
+                    </Button>
+                ) : (
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        Файл ещё не загружен
+                    </Typography>
+                )}
+
+                {href && !hasFile ? (
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        внешняя ссылка
+                    </Typography>
+                ) : null}
             </CardActions>
         </Card>
     );

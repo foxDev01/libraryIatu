@@ -1,7 +1,10 @@
 export interface Book {
     id: number;
     bookname: string;
-    link: string;
+    /** Внешняя ссылка (если книга хранится не у нас). */
+    link: string | null;
+    /** Есть ли файл на сервере — тогда качаем через /api/books/{id}/download. */
+    has_file?: boolean;
     type_id?: number;
 }
 
