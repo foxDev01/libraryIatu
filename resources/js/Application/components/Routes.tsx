@@ -7,6 +7,8 @@ import App from '../App';
 
 const LoginView = React.lazy(() => import('./Auth/LoginView'));
 const RegisterView = React.lazy(() => import('./Auth/RegisterView'));
+const ForgotPasswordView = React.lazy(() => import('./Auth/ForgotPasswordView'));
+const ResetPasswordView = React.lazy(() => import('./Auth/ResetPasswordView'));
 const BooksPage = React.lazy(() => import('./Book/BooksPage'));
 const AboutPage = React.lazy(() => import('./pages/AboutPage'));
 const AddNewQuestion = React.lazy(() => import('./pages/AddNewQuestion'));
@@ -54,6 +56,8 @@ export function createAppRouter() {
             children: [
                 { path: 'login', element: withFallback(<GuestOnly><LoginView /></GuestOnly>) },
                 { path: 'register', element: withFallback(<GuestOnly><RegisterView /></GuestOnly>) },
+                { path: 'forgot-password', element: withFallback(<GuestOnly><ForgotPasswordView /></GuestOnly>) },
+                { path: 'reset-password', element: withFallback(<GuestOnly><ResetPasswordView /></GuestOnly>) },
                 {
                     element: <RequireAuth />,
                     children: [

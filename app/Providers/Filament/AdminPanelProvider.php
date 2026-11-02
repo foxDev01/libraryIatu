@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->passwordReset()
             ->brandName('Библиотека ИАТУ')
             ->colors([
                 'primary' => Color::Amber,
