@@ -24,10 +24,12 @@ import {
     Menu,
     MenuItem,
     Toolbar,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
 
+import ThemeToggle from '../ThemeToggle';
 import { useSession } from '../../session';
 
 interface NavBarProps {
@@ -116,7 +118,12 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
         <>
             <AppBar
                 position="static"
+                elevation={0}
                 sx={{
+                    bgcolor: 'background.paper',
+                    color: 'text.primary',
+                    borderBottom: 1,
+                    borderColor: 'divider',
                     transition: (transitionTheme) => transitionTheme.transitions.create(['margin', 'width'], {
                         easing: open
                             ? transitionTheme.transitions.easing.easeOut
@@ -141,18 +148,16 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography
-                        sx={{ display: 'none', sm: { display: 'block' } }}
-                        variant="h6"
-                        noWrap
-                    >
-                        Библиотека института ГРУППА : {group ?? '—'}
+                    <Typography sx={{ display: { xs: 'none', sm: 'block' } }} variant="h6" noWrap>
+                        Электронная библиотека ИАТУ
                     </Typography>
 
                     <Box sx={{ flexGrow: 1 }} />
 
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        {auth ? (
+                    <ThemeToggle />
+
+                    {auth ? (
+                        <Tooltip title="Меню пользователя" arrow>
                             <IconButton
                                 edge="end"
                                 aria-label="Меню пользователя"
@@ -162,13 +167,22 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
                             >
                                 <AccountCircleIcon />
                             </IconButton>
-                        ) : null}
-                    </Box>
+                        </Tooltip>
+                    ) : null}
                 </Toolbar>
             </AppBar>
 
             <Drawer
-                sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth } }}
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                        borderRight: 1,
+                        borderColor: 'divider',
+                    },
+                }}
                 variant="persistent"
                 anchor="left"
                 open={open}
@@ -187,28 +201,43 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
                 </Box>
                 <Divider />
 
-                <List>
+                <Box sx={{ px: 2, pt: 2 }}>
+                    <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                        Группа
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 600 }} noWrap>
+                        {group ?? '—'}
+                    </Typography>
+                </Box>
+
+                <List sx={{ mt: 1 }}>
                     {navItems.map((item) => (
                         <ListItem key={item.url} disablePadding>
-                            <ListItemButton>
+                            <ListItemButton
+                                component={NavLink}
+                                to={item.url ?? '/'}
+                                end={item.url === '/'}
+                                sx={{
+                                    '&.active': {
+                                        bgcolor: 'action.selected',
+                                        color: 'primary.main',
+                                        '& .MuiListItemIcon-root': { color: 'primary.main' },
+                                        '& .MuiListItemText-primary': { fontWeight: 600 },
+                                    },
+                                }}
+                            >
                                 <ListItemIcon>{item.icon}</ListItemIcon>
-                                <NavLink
-                                    to={item.url ?? '/'}
-                                    style={({ isActive }: { isActive: boolean }) => ({
-                                        color: isActive ? '#0080FF' : '#05c3fc',
-                                        fontWeight: isActive ? 'bold' : 'normal',
-                                    })}
-                                >
-                                    <ListItemText primary={item.title} />
-                                </NavLink>
+                                <ListItemText primary={item.title} />
                             </ListItemButton>
                         </ListItem>
                     ))}
 
+                    {disciplines.length > 0 ? <Divider sx={{ my: 1 }} /> : null}
+
                     {disciplines.map((discipline) => (
-                        <ListItem key={discipline}>
-                            <ListItemIcon>
-                                <MenuBookOutlinedIcon color="primary" />
+                        <ListItem key={discipline} sx={{ pl: 2 }}>
+                            <ListItemIcon sx={{ minWidth: 36 }}>
+                                <MenuBookOutlinedIcon color="primary" fontSize="small" />
                             </ListItemIcon>
                             <ListItemText primary={discipline} />
                         </ListItem>

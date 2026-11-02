@@ -6,7 +6,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import NavBar from './components/NavBar/NavBar';
 import Index from './components/Main/Index';
+import ThemeToggle from './components/ThemeToggle';
 import { SessionProvider } from './session';
+import { AppThemeProvider } from './theme';
 
 const App: React.FC = () => {
   // null means "session status is still being checked".
@@ -33,26 +35,26 @@ const App: React.FC = () => {
     };
   }, []);
 
-  if (auth === null) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  const context = {
-    auth: auth,
-    setAuth: (value: boolean) => setAuth(value),
-  };
-
   return (
-    <SessionProvider value={context}>
-      {auth ? <NavBar open={open} onToggleDrawer={() => setOpen(!open)} /> : null}
-      <Index open={open}>
-        <Outlet />
-      </Index>
-    </SessionProvider>
+    <AppThemeProvider>
+      {auth === null ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <SessionProvider value={{ auth, setAuth }}>
+          {auth ? (
+            <NavBar open={open} onToggleDrawer={() => setOpen(!open)} />
+          ) : (
+            // Guest pages have no app bar, so the switch floats in the corner.
+            <ThemeToggle sx={{ position: 'fixed', top: 8, right: 8, zIndex: 1200 }} />
+          )}
+          <Index open={open}>
+            <Outlet />
+          </Index>
+        </SessionProvider>
+      )}
+    </AppThemeProvider>
   );
 };
 

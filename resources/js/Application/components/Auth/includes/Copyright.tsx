@@ -3,7 +3,7 @@ import { Link, Typography } from '@mui/material';
 
 const Copyright = () => {
     return (
-        <Typography variant="body2" color="textSecondary" align="center">
+        <Typography variant="body2" sx={{ color: 'text.secondary' }} align="center">
             {'©'}
             <Link color="inherit" href="http://iatu.ulstu.ru/">
                 ИАТУ

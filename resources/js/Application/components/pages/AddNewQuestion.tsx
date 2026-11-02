@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 export default function AddNewQuestion() {
     const navigate = useNavigate();
@@ -20,8 +23,17 @@ export default function AddNewQuestion() {
     }, [navigate]);
 
     if (error) {
-        return <p role="alert">{error}</p>;
+        return (
+            <Typography color="error" role="alert">
+                {error}
+            </Typography>
+        );
     }
 
-    return <p>Создание вопроса…</p>;
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 6, justifyContent: 'center' }}>
+            <CircularProgress size={24} />
+            <Typography sx={{ color: 'text.secondary' }}>Создание вопроса…</Typography>
+        </Box>
+    );
 }

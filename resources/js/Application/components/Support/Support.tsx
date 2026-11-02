@@ -84,7 +84,7 @@ const Support: React.FC<SupportProps> = (props) => {
     };
 
     return (
-        <Card sx={{ minWidth: 150, m: '5px' }}>
+        <Card variant="outlined" sx={{ m: '5px' }}>
             <CardContent>
                 {isRedact ? (
                     <Box
@@ -124,10 +124,10 @@ const Support: React.FC<SupportProps> = (props) => {
                     </Box>
                 ) : (
                     <>
-                        <Typography color="textPrimary" variant="h3" sx={{ fontSize: 18 }}>
+                        <Typography variant="subtitle1" component="h2" sx={{ fontWeight: 600, mb: 0.5 }}>
                             {title}
                         </Typography>
-                        <Typography variant="body2" component="p">
+                        <Typography variant="body2" component="p" sx={{ color: 'text.secondary' }}>
                             {content}
                         </Typography>
                     </>
@@ -169,11 +169,14 @@ const Support: React.FC<SupportProps> = (props) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 400,
-                                backgroundColor: '#CCCCFF',
-                                border: '2px solid #000',
+                                width: { xs: 'calc(100% - 32px)', sm: 420 },
+                                bgcolor: 'background.paper',
+                                color: 'text.primary',
+                                borderRadius: 2,
+                                border: 1,
+                                borderColor: 'divider',
                                 boxShadow: 24,
-                                p: '16px 32px 24px',
+                                p: { xs: 2, sm: 3 },
                             }}
                         >
                             <Typography id="transition-modal-title" variant="h6" component="h2">

@@ -3,9 +3,9 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
+import PageSurface from '../Main/PageSurface';
 import SupportList from './SupportList';
 import { Question } from '../../types';
 
@@ -29,43 +29,34 @@ export default function SupportPage() {
     }, [loadQuestions]);
 
     return (
-        <Box
-            sx={{
-                flexGrow: 1,
-                position: 'relative',
-                height: '500px',
-                padding: '10px',
-                margin: '3px',
-                backgroundColor: '#91CEEE',
-            }}
+        <PageSurface
+            title="Помощь"
+            description="Ваши вопросы в поддержку библиотеки."
         >
-            <Paper
-                sx={{
-                    p: 2,
-                    textAlign: 'center',
-                    color: 'text.secondary',
-                    position: 'relative',
-                    height: '100%',
-                    backgroundColor: '#DDDDFF',
-                }}
-            >
-                {loading ? <CircularProgress /> : null}
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+                    <CircularProgress />
+                </Box>
+            ) : null}
 
-                {!loading && error ? (
-                    <>
-                        <Typography color="error" role="alert">{error}</Typography>
-                        <Button onClick={loadQuestions}>Повторить</Button>
-                    </>
-                ) : null}
+            {!loading && error ? (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography color="error" role="alert" gutterBottom>
+                        {error}
+                    </Typography>
+                    <Button onClick={loadQuestions}>Повторить</Button>
+                </Box>
+            ) : null}
 
-                {!loading && !error && questions.length === 0 ? (
-                    <Typography>У вас пока нет вопросов.</Typography>
-                ) : null}
+            {!loading && !error && questions.length === 0 ? (
+                <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 6 }}>
+                    У вас пока нет вопросов.
+                </Typography>
+            ) : null}
 
-                {!loading && !error && questions.length > 0 ? (
-                    <SupportList questions={questions} onChanged={loadQuestions} />
-                ) : null}
-            </Paper>
-        </Box>
+            {!loading && !error && questions.length > 0 ? (
+                <SupportList questions={questions} onChanged={loadQuestions} />
+            ) : null}
+        </PageSurface>
     );
 }

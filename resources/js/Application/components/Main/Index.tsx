@@ -5,12 +5,12 @@ const drawerWidth = 240;
 
 const Index: React.FC<{ open: boolean; children: React.ReactNode }> = ({ open, children }) => {
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: 'calc(100vh - 64px)' }}>
             <Box
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
+                    p: { xs: 2, sm: 3 },
                     ml: open ? `${drawerWidth}px` : 0,
                     transition: (transitionTheme) => transitionTheme.transitions.create('margin', {
                         easing: open

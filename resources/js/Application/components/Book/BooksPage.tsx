@@ -3,10 +3,10 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 import BooksList from './BooksList';
+import PageSurface from '../Main/PageSurface';
 import { Book as BookType } from '../../types';
 
 export default function BooksPage() {
@@ -29,43 +29,34 @@ export default function BooksPage() {
     }, [loadBooks]);
 
     return (
-        <Box
-            sx={{
-                flexGrow: 1,
-                position: 'relative',
-                height: '500px',
-                padding: '10px',
-                margin: '3px',
-                backgroundColor: '#91CEEE',
-            }}
+        <PageSurface
+            title="Книги"
+            description="Учебники и пособия, подобранные для вашей группы."
         >
-            <Paper
-                sx={{
-                    p: 2,
-                    textAlign: 'center',
-                    color: 'text.secondary',
-                    position: 'relative',
-                    height: '100%',
-                    backgroundColor: '#DDDDFF',
-                }}
-            >
-                {loading ? <CircularProgress /> : null}
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+                    <CircularProgress />
+                </Box>
+            ) : null}
 
-                {!loading && error ? (
-                    <>
-                        <Typography color="error" role="alert">{error}</Typography>
-                        <Button onClick={loadBooks}>Повторить</Button>
-                    </>
-                ) : null}
+            {!loading && error ? (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography color="error" role="alert" gutterBottom>
+                        {error}
+                    </Typography>
+                    <Button onClick={loadBooks}>Повторить</Button>
+                </Box>
+            ) : null}
 
-                {!loading && !error && books.length === 0 ? (
-                    <Typography>Для вашей группы пока нет книг.</Typography>
-                ) : null}
+            {!loading && !error && books.length === 0 ? (
+                <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 6 }}>
+                    Для вашей группы пока нет книг.
+                </Typography>
+            ) : null}
 
-                {!loading && !error && books.length > 0 ? (
-                    <BooksList books={books} />
-                ) : null}
-            </Paper>
-        </Box>
+            {!loading && !error && books.length > 0 ? (
+                <BooksList books={books} />
+            ) : null}
+        </PageSurface>
     );
 }

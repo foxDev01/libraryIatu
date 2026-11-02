@@ -3,9 +3,9 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -53,76 +53,85 @@ const LoginView: React.FC = () => {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Вход
-                </Typography>
-                <Box component="form" sx={{ width: '100%', mt: 1 }} noValidate onSubmit={handleSubmit}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        autoFocus
-                        value={email}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Пароль"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                value="remember"
-                                color="primary"
-                                checked={remember}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setRemember(event.target.checked)}
-                            />
-                        }
-                        label="Запомнить меня"
-                    />
-                    {error ? (
-                        <Typography color="error" variant="body2" role="alert">
-                            {error}
-                        </Typography>
-                    ) : null}
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        disabled={loading}
-                    >
-                        {loading ? 'Входим…' : 'Войти'}
-                    </Button>
-                    <Box sx={{ display: 'flex' }}>
-                        <NavLink to="/register">
-                            Нет аккаунта? Зарегистрироваться
-                        </NavLink>
+        <Container component="main" maxWidth="xs" sx={{ py: { xs: 4, sm: 8 } }}>
+            <Paper
+                elevation={0}
+                sx={{
+                    p: { xs: 3, sm: 4 },
+                    borderRadius: 3,
+                    border: 1,
+                    borderColor: 'divider',
+                }}
+            >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Вход
+                    </Typography>
+                    <Box component="form" sx={{ width: '100%', mt: 1 }} noValidate onSubmit={handleSubmit}>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            autoFocus
+                            value={email}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Пароль"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    value="remember"
+                                    color="primary"
+                                    checked={remember}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setRemember(event.target.checked)}
+                                />
+                            }
+                            label="Запомнить меня"
+                        />
+                        {error ? (
+                            <Typography color="error" variant="body2" role="alert">
+                                {error}
+                            </Typography>
+                        ) : null}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={loading}
+                        >
+                            {loading ? 'Входим…' : 'Войти'}
+                        </Button>
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <NavLink to="/register">
+                                Нет аккаунта? Зарегистрироваться
+                            </NavLink>
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-            <Box sx={{ mt: 8 }}>
+            </Paper>
+            <Box sx={{ mt: 3 }}>
                 <Copyright />
             </Box>
         </Container>
