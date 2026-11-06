@@ -44,8 +44,9 @@ npm run build        # сборка фронтенда
   (`User::canAccessPanel()`, команда `php artisan app:make-admin email`).
 - Локаль по умолчанию `ru`: ошибки валидации и UI-сообщения — на русском.
 - API: GET только для чтения, изменения через `POST` / `PUT` / `DELETE` (CSRF-защита SPA Sanctum).
-- Файлы книг лежат на приватном диске `local` (`storage/app/private/books`) и отдаются только
-  через `GET /api/books/{id}/download` с проверкой учебной группы. `php artisan storage:link`
+- Файлы книг лежат на приватном диске `local` (`storage/app/private/books`, обложки —
+  `storage/app/private/covers`) и отдаются только через `GET /api/books/{id}/download`
+  и `GET /api/books/{id}/cover` с проверкой учебной группы. `php artisan storage:link`
   делать нельзя — это открыло бы файлы в обход прав.
 - Не коммитить: `libraryiatu.sql` (персональные данные!), `.env`, `database/*.sqlite`,
   `public/build`, `vendor`, `node_modules`, IDE-каталоги.

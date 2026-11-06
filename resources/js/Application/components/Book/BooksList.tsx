@@ -16,8 +16,15 @@ const BooksList: React.FC<{ books: Book[] }> = ({ books }) => {
                 flexGrow: 1,
             }}
         >
-            {books.map(({ id, bookname, link, has_file: hasFile }) => (
-                <BookCard key={id} id={id} bookname={bookname} link={link} has_file={hasFile} />
+            {books.map(({ id, bookname, link, has_file: hasFile, has_cover: hasCover }) => (
+                <BookCard
+                    key={id}
+                    id={id}
+                    bookname={bookname}
+                    link={link}
+                    has_file={hasFile}
+                    has_cover={hasCover}
+                />
             ))}
         </Box>
     );

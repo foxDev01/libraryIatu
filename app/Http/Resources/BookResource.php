@@ -14,8 +14,9 @@ class BookResource extends JsonResource
     /**
      * Публичное представление книги для SPA.
      *
-     * Внутренний путь файла (file_path) наружу не отдаём: скачивание идёт
-     * через GET /api/books/{id}/download с проверкой группы.
+     * Внутренние пути (file_path, cover_path) наружу не отдаём: файл идёт
+     * через GET /api/books/{id}/download, обложка — через /api/books/{id}/cover,
+     * оба эндпоинта проверяют группу.
      *
      * @return array<string, mixed>
      */
@@ -27,6 +28,7 @@ class BookResource extends JsonResource
             'link' => $this->link,
             'type_id' => $this->type_id,
             'has_file' => $this->hasFile(),
+            'has_cover' => $this->hasCover(),
         ];
     }
 }

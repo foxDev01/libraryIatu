@@ -21,6 +21,22 @@ class BookForm
                     ->required()
                     ->maxLength(500),
 
+                FileUpload::make('cover_path')
+                    ->label('Обложка')
+                    ->image()
+                    ->disk(Book::FILE_DISK)
+                    ->directory(Book::COVER_DIRECTORY)
+                    ->visibility('private')
+                    ->imageEditor()
+                    ->imagePreviewHeight('9.5rem')
+                    ->acceptedFileTypes([
+                        'image/jpeg',
+                        'image/png',
+                        'image/webp',
+                    ])
+                    ->maxSize(10_240)
+                    ->helperText('JPG, PNG или WEBP до 10 МБ. Студенты увидят её на карточке книги.'),
+
                 TextInput::make('link')
                     ->label('Внешняя ссылка')
                     ->url()

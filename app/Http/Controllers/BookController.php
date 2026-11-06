@@ -60,6 +60,29 @@ class BookController extends Controller
     }
 
     /**
+     * Отдать обложку книги как inline-изображение.
+     *
+     * Тот же доступ, что и на файл книги: обложка лежит на приватном диске
+     * и отдаётся только студентам её группы. Формат <img> в SPA подхватит
+     * автоматически (cookie уходит тем же origin'ом).
+     */
+    public function cover(Request $request, int $id): Response
+    {
+        $book = Book::query()->findOrFail($id);
+
+        abort_unless($this->isAvailableForUser($book, $request), 403, 'Книга недоступна для вашей группы.');
+        abort_unless($book->hasCover(), 404, 'У книги нет обложки.');
+
+        /** @var string $path */
+        $path = $book->cover_path;
+        $disk = Storage::disk(Book::FILE_DISK);
+
+        abort_unless($disk->exists($path), 404, 'Файл обложки не найден на сервере.');
+
+        return $disk->response($path, $book->coverFileName());
+    }
+
+    /**
      * Закреплена ли книга за учебной группой пользователя.
      */
     private function isAvailableForUser(Book $book, Request $request): bool

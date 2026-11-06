@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Учебная книга: файл в приватном диске либо ссылка на внешний ресурс.
+ * Учебная книга: файл в приватном диске либо ссылка на внешний ресурс,
+ * плюс необязательная обложка рядом с файлом.
  *
  * @property int $id
  * @property string $bookname
  * @property string|null $link
- * @property string|null $file_path путь внутри диска {@see self::FILE_DISK}
+ * @property string|null $file_path путь к файлу книги внутри диска {@see self::FILE_DISK}
+ * @property string|null $cover_path путь к обложке внутри диска {@see self::FILE_DISK}
  * @property int $type_id
  */
 class Book extends Model
@@ -25,11 +27,22 @@ class Book extends Model
 
     /**
      * Файлы лежат на приватном диске: наружу они отдаются только через
-     * BookController::download() после проверки группы пользователя.
+     * BookController::download() и BookController::cover() после
+     * проверки группы пользователя.
      */
     public const FILE_DISK = 'local';
 
     public const FILE_DIRECTORY = 'books';
+
+    public const COVER_DIRECTORY = 'covers';
+
+    /**
+     * Атрибуты с файлами на диске: при замене старые удаляются,
+     * при удалении книги удаляются вместе с ней.
+     *
+     * @var list<string>
+     */
+    private const FILE_ATTRIBUTES = ['file_path', 'cover_path'];
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +53,7 @@ class Book extends Model
         'bookname',
         'link',
         'file_path',
+        'cover_path',
         'type_id',
     ];
 
@@ -68,13 +82,34 @@ class Book extends Model
         return $this->file_path !== null && $this->file_path !== '';
     }
 
+    public function hasCover(): bool
+    {
+        return $this->cover_path !== null && $this->cover_path !== '';
+    }
+
     /**
      * Имя файла, которое получит студент при скачивании: название книги
      * (без символов, запрещённых в файловых системах) и исходное расширение.
      */
     public function downloadFileName(): string
     {
-        $extension = $this->file_path === null ? '' : pathinfo($this->file_path, PATHINFO_EXTENSION);
+        return $this->safeFileName(
+            $this->file_path === null ? '' : pathinfo($this->file_path, PATHINFO_EXTENSION)
+        );
+    }
+
+    /**
+     * Похожее имя для обложки (приходит в Content-Disposition ответа).
+     */
+    public function coverFileName(): string
+    {
+        return $this->safeFileName(
+            $this->cover_path === null ? '' : pathinfo($this->cover_path, PATHINFO_EXTENSION)
+        );
+    }
+
+    private function safeFileName(string $extension): string
+    {
         $safe = trim((string) preg_replace('/[^\p{L}\p{N}._-]+/u', '-', $this->bookname), ' -');
 
         if ($safe === '') {
@@ -86,13 +121,15 @@ class Book extends Model
 
     protected static function booted(): void
     {
-        // Файл больше не нужен, если его заменили другим.
+        // Файл (книга или обложка) больше не нужен, если его заменили другим.
         static::updated(static function (Book $book): void {
-            /** @var string|null $previous */
-            $previous = $book->getOriginal('file_path');
+            foreach (self::FILE_ATTRIBUTES as $attribute) {
+                /** @var string|null $previous */
+                $previous = $book->getOriginal($attribute);
 
-            if ($previous !== null && $previous !== '' && $previous !== $book->file_path) {
-                $book->deleteStoredFile($previous);
+                if ($previous !== null && $previous !== '' && $previous !== $book->{$attribute}) {
+                    $book->deleteStoredFile($previous);
+                }
             }
         });
 
@@ -101,10 +138,13 @@ class Book extends Model
             $book->groupNames()->detach();
             $book->disciplines()->detach();
 
-            if ($book->hasFile()) {
-                /** @var string $path */
-                $path = $book->file_path;
-                $book->deleteStoredFile($path);
+            foreach (self::FILE_ATTRIBUTES as $attribute) {
+                /** @var string|null $path */
+                $path = $book->{$attribute};
+
+                if ($path !== null && $path !== '') {
+                    $book->deleteStoredFile($path);
+                }
             }
         });
     }

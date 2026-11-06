@@ -43,9 +43,41 @@ class BookTest extends TestCase
             ->assertJsonCount(1)
             ->assertJsonFragment(['bookname' => 'Базы данных']);
 
-        // Внутренний путь файла наружу не отдаётся, есть файл — показывает has_file.
+        // Внутренние пути наружу не отдаются, флаги показывают, что у книги есть.
         $this->assertFalse($response->json('0.has_file'));
+        $this->assertFalse($response->json('0.has_cover'));
         $this->assertNull($response->json('0.file_path'));
+        $this->assertNull($response->json('0.cover_path'));
+    }
+
+    public function test_books_endpoint_marks_a_book_with_a_cover(): void
+    {
+        $user = User::factory()->create();
+
+        $groupName = GroupName::create(['groupname' => 'АИСТбд-21']);
+        Group::create(['user_id' => $user->id, 'groupname_id' => $groupName->id]);
+
+        $type = Type::create(['typenames' => 'Учебник']);
+        $book = Book::create([
+            'bookname' => 'Базы данных',
+            'link' => 'https://example.com/db.pdf',
+            'cover_path' => 'covers/hidden.png',
+            'type_id' => $type->id,
+        ]);
+        $groupName->books()->attach($book);
+
+        $this->actingAs($user)
+            ->getJson('/api/books')
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertExactJson([[
+                'id' => $book->id,
+                'bookname' => 'Базы данных',
+                'link' => 'https://example.com/db.pdf',
+                'type_id' => $type->id,
+                'has_file' => false,
+                'has_cover' => true,
+            ]]);
     }
 
     public function test_books_endpoint_returns_empty_list_without_a_group(): void
