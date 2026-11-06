@@ -28,7 +28,10 @@ class BookForm
                     ->directory(Book::COVER_DIRECTORY)
                     ->visibility('private')
                     ->imageEditor()
-                    ->imagePreviewHeight('9.5rem')
+                    // Compact-свертка показывает превью полосой в несколько
+                    // пикселей; для обложки нужен полноценный просмотр.
+                    ->panelLayout('integrated')
+                    ->imagePreviewHeight('320px')
                     ->acceptedFileTypes([
                         'image/jpeg',
                         'image/png',
