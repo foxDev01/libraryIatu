@@ -10,6 +10,17 @@ export interface Book {
     type_id?: number;
 }
 
+export interface Discipline {
+    id: number;
+    disciplinename: string;
+}
+
+/** Ответ GET /api/disciplines/{id}/books. */
+export interface DisciplineBooks {
+    discipline: Discipline;
+    books: Book[];
+}
+
 export interface Question {
     id: number;
     title: string;

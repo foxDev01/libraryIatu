@@ -10,6 +10,7 @@ const RegisterView = React.lazy(() => import('./Auth/RegisterView'));
 const ForgotPasswordView = React.lazy(() => import('./Auth/ForgotPasswordView'));
 const ResetPasswordView = React.lazy(() => import('./Auth/ResetPasswordView'));
 const BooksPage = React.lazy(() => import('./Book/BooksPage'));
+const DisciplineBooksPage = React.lazy(() => import('./Discipline/DisciplineBooksPage'));
 const AboutPage = React.lazy(() => import('./pages/AboutPage'));
 const AddNewQuestion = React.lazy(() => import('./pages/AddNewQuestion'));
 const SupportPage = React.lazy(() => import('./Support/SupportPage'));
@@ -62,6 +63,7 @@ export function createAppRouter() {
                     element: <RequireAuth />,
                     children: [
                         { index: true, element: withFallback(<BooksPage />) },
+                        { path: 'disciplines/:id', element: withFallback(<DisciplineBooksPage />) },
                         { path: 'about', element: withFallback(<AboutPage />) },
                         { path: 'support', element: withFallback(<SupportPage />) },
                         { path: 'add_new', element: withFallback(<AddNewQuestion />) },

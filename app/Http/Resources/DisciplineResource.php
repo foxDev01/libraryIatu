@@ -7,19 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property Discipline $resource
- * @property int $id
- * @property string $disciplinename
+ * @mixin Discipline
  */
 class DisciplineResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Публичное представление дисциплины для SPA.
      *
-     * @param  Request  $request
-     * @return array{id: int, disciplinename: string}
+     * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,

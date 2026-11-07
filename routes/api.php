@@ -56,6 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [UserController::class, 'me']);
     Route::get('groups', [GroupController::class, 'group_by_id']);
     Route::get('disciplines', [DisciplineController::class, 'disciplines']);
+    Route::get('disciplines/{id}/books', [DisciplineController::class, 'books'])
+        ->whereNumber('id')
+        ->middleware('throttle:60,1');
     Route::get('books', [BookController::class, 'book_by_group_id']);
     Route::get('books/{id}/download', [BookController::class, 'download'])
         ->whereNumber('id')

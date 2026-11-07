@@ -105,7 +105,8 @@ php artisan route:list
 | `POST` | `/api/reset-password` | Установка нового пароля по токену (6/мин) |
 | `GET` | `/api/user` | Имя текущего пользователя |
 | `GET` | `/api/groups` | Группа пользователя |
-| `GET` | `/api/disciplines` | Дисциплины группы |
+| `GET` | `/api/disciplines` | Дисциплины группы (`id`, `disciplinename`) |
+| `GET` | `/api/disciplines/{id}/books` | Книги дисциплины, доступные группе (проверка группы) |
 | `GET` | `/api/books` | Книги группы |
 | `GET` | `/api/books/{id}/download` | Файл книги (проверка группы) или редирект на внешнюю ссылку |
 | `GET` | `/api/books/{id}/cover` | Обложка книги (inline-картинка, проверка группы) |

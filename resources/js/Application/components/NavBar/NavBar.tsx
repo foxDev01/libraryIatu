@@ -31,6 +31,7 @@ import {
 
 import ThemeToggle from '../ThemeToggle';
 import { useSession } from '../../session';
+import { Discipline } from '../../types';
 
 interface NavBarProps {
     open: boolean;
@@ -45,6 +46,16 @@ interface NavItem {
 
 const drawerWidth = 240;
 
+/** Подсветка активного пункта меню — общая для разделов и дисциплин. */
+const activeItemSx = {
+    '&.active': {
+        bgcolor: 'action.selected',
+        color: 'primary.main',
+        '& .MuiListItemIcon-root': { color: 'primary.main' },
+        '& .MuiListItemText-primary': { fontWeight: 600 },
+    },
+};
+
 const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
     const theme = useTheme();
     const navigate = useNavigate();
@@ -52,7 +63,7 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [group, setGroup] = useState<string | null>(null);
     const [user, setUser] = useState<string>('');
-    const [disciplines, setDisciplines] = useState<string[]>([]);
+    const [disciplines, setDisciplines] = useState<Discipline[]>([]);
     const isMenuOpen = Boolean(anchorEl);
 
     useEffect(() => {
@@ -74,7 +85,7 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
             })
             .catch(() => undefined);
 
-        axios.get<string[]>('/api/disciplines')
+        axios.get<Discipline[]>('/api/disciplines')
             .then((response) => {
                 if (!cancelled) {
                     setDisciplines(response.data);
@@ -217,14 +228,7 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
                                 component={NavLink}
                                 to={item.url ?? '/'}
                                 end={item.url === '/'}
-                                sx={{
-                                    '&.active': {
-                                        bgcolor: 'action.selected',
-                                        color: 'primary.main',
-                                        '& .MuiListItemIcon-root': { color: 'primary.main' },
-                                        '& .MuiListItemText-primary': { fontWeight: 600 },
-                                    },
-                                }}
+                                sx={activeItemSx}
                             >
                                 <ListItemIcon>{item.icon}</ListItemIcon>
                                 <ListItemText primary={item.title} />
@@ -235,11 +239,17 @@ const NavBar: React.FC<NavBarProps> = ({ open, onToggleDrawer }) => {
                     {disciplines.length > 0 ? <Divider sx={{ my: 1 }} /> : null}
 
                     {disciplines.map((discipline) => (
-                        <ListItem key={discipline} sx={{ pl: 2 }}>
-                            <ListItemIcon sx={{ minWidth: 36 }}>
-                                <MenuBookOutlinedIcon color="primary" fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText primary={discipline} />
+                        <ListItem key={discipline.id} disablePadding>
+                            <ListItemButton
+                                component={NavLink}
+                                to={`/disciplines/${discipline.id}`}
+                                sx={{ ...activeItemSx, pl: 2 }}
+                            >
+                                <ListItemIcon sx={{ minWidth: 36 }}>
+                                    <MenuBookOutlinedIcon color="primary" fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText primary={discipline.disciplinename} />
+                            </ListItemButton>
                         </ListItem>
                     ))}
                 </List>
