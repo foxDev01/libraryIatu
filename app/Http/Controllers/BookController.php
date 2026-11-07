@@ -18,14 +18,16 @@ class BookController extends Controller
     {
         $group = $request->user()
             ->group()
-            ->with('groupname.books')
+            ->with('groupname.books.type')
             ->first();
 
         if ($group === null || $group->groupname === null) {
             return response()->json([]);
         }
 
-        $books = BookResource::collection($group->groupname->books->values())->resolve($request);
+        $books = BookResource::collection(
+            $group->groupname->books->sortBy('bookname')->values()
+        )->resolve($request);
 
         return response()->json($books);
     }

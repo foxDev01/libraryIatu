@@ -101,6 +101,7 @@ class DisciplineTest extends TestCase
                     'bookname' => 'Базы данных. Учебник',
                     'link' => 'https://example.com/db.pdf',
                     'type_id' => $type->id,
+                    'type_name' => 'Учебник',
                     'has_file' => false,
                     'has_cover' => false,
                 ]],

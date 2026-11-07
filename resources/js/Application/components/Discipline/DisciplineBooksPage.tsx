@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
-import BooksList from '../Book/BooksList';
+import BooksBrowser from '../Book/BooksBrowser';
 import PageSurface from '../Main/PageSurface';
 import { DisciplineBooks } from '../../types';
 
@@ -81,7 +81,7 @@ export default function DisciplineBooksPage() {
             ) : null}
 
             {!loading && !notFound && !error && books.length > 0 ? (
-                <BooksList books={books} />
+                <BooksBrowser books={books} />
             ) : null}
         </PageSurface>
     );

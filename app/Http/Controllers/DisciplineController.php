@@ -53,6 +53,7 @@ class DisciplineController extends Controller
         $groupBookIds = $group->groupname?->books()->pluck('books.id')->all() ?? [];
 
         $books = $discipline->books()
+            ->with('type')
             ->whereKey($groupBookIds)
             ->orderBy('bookname')
             ->get();

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
-import BooksList from './BooksList';
+import BooksBrowser from './BooksBrowser';
 import PageSurface from '../Main/PageSurface';
 import { Book as BookType } from '../../types';
 
@@ -55,7 +55,7 @@ export default function BooksPage() {
             ) : null}
 
             {!loading && !error && books.length > 0 ? (
-                <BooksList books={books} />
+                <BooksBrowser books={books} />
             ) : null}
         </PageSurface>
     );

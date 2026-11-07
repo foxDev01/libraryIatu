@@ -8,6 +8,8 @@ export interface Book {
     /** Есть ли обложка — тогда рисуем её через /api/books/{id}/cover. */
     has_cover?: boolean;
     type_id?: number;
+    /** Название типа книги (для фильтра и подписей). */
+    type_name?: string | null;
 }
 
 export interface Discipline {

@@ -75,6 +75,7 @@ class BookTest extends TestCase
                 'bookname' => 'Базы данных',
                 'link' => 'https://example.com/db.pdf',
                 'type_id' => $type->id,
+                'type_name' => 'Учебник',
                 'has_file' => false,
                 'has_cover' => true,
             ]]);

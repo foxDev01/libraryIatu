@@ -27,6 +27,7 @@ class BookResource extends JsonResource
             'bookname' => $this->bookname,
             'link' => $this->link,
             'type_id' => $this->type_id,
+            'type_name' => $this->type?->typenames,
             'has_file' => $this->hasFile(),
             'has_cover' => $this->hasCover(),
         ];
