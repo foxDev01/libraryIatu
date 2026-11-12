@@ -16,7 +16,16 @@ class QuestionInfolist
                 TextEntry::make('title')
                     ->label('Тема вопроса'),
                 TextEntry::make('content')
-                    ->label('Вопрос'),
+                    ->label('Вопрос')
+                    ->columnSpanFull(),
+                TextEntry::make('answer')
+                    ->label('Ответ поддержки')
+                    ->placeholder('Пока нет ответа')
+                    ->columnSpanFull(),
+                TextEntry::make('answered_at')
+                    ->label('Отвечено')
+                    ->dateTime('d.m.Y H:i')
+                    ->placeholder('—'),
                 TextEntry::make('created_at')
                     ->label('Создан')
                     ->dateTime('d.m.Y H:i'),

@@ -22,8 +22,30 @@ interface SupportProps {
     id: number;
     title: string;
     content: string;
+    answer?: string | null;
+    answeredAt?: string | null;
     onChanged: () => void;
 }
+
+const formatAnsweredAt = (value: string | null | undefined): string | null => {
+    if (!value) {
+        return null;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+
+    return date.toLocaleString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
 
 const Support: React.FC<SupportProps> = (props) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -32,6 +54,8 @@ const Support: React.FC<SupportProps> = (props) => {
     const [error, setError] = useState<string | null>(null);
     const [title, setTitle] = useState<string>(props.title);
     const [content, setContent] = useState<string>(props.content);
+
+    const answeredAtLabel = formatAnsweredAt(props.answeredAt);
 
     useEffect(() => {
         setTitle(props.title);
@@ -130,6 +154,34 @@ const Support: React.FC<SupportProps> = (props) => {
                         <Typography variant="body2" component="p" sx={{ color: 'text.secondary' }}>
                             {content}
                         </Typography>
+                        {props.answer ? (
+                            <Box
+                                sx={{
+                                    mt: 1.5,
+                                    p: 1.5,
+                                    borderRadius: 2,
+                                    bgcolor: 'action.hover',
+                                    borderLeft: 4,
+                                    borderColor: 'primary.main',
+                                }}
+                            >
+                                <Typography variant="subtitle2" component="h3" sx={{ fontWeight: 600 }}>
+                                    Ответ поддержки
+                                </Typography>
+                                {answeredAtLabel ? (
+                                    <Typography
+                                        variant="caption"
+                                        component="p"
+                                        sx={{ display: 'block', mb: 0.5, color: 'text.secondary' }}
+                                    >
+                                        {answeredAtLabel}
+                                    </Typography>
+                                ) : null}
+                                <Typography variant="body2" component="p" sx={{ whiteSpace: 'pre-line' }}>
+                                    {props.answer}
+                                </Typography>
+                            </Box>
+                        ) : null}
                     </>
                 )}
                 {error ? (

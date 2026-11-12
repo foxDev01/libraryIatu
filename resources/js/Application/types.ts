@@ -27,6 +27,9 @@ export interface Question {
     id: number;
     title: string;
     content: string;
+    /** Ответ поддержки: виден автору вопроса после ответа админа. */
+    answer?: string | null;
+    answered_at?: string | null;
     user_id?: number;
     created_at?: string;
     updated_at?: string;

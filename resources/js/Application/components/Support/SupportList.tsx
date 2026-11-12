@@ -12,6 +12,8 @@ const SupportList: React.FC<{ questions: Question[]; onChanged: () => void }> = 
                     id={question.id}
                     title={question.title}
                     content={question.content}
+                    answer={question.answer}
+                    answeredAt={question.answered_at}
                     onChanged={onChanged}
                 />
             ))}
