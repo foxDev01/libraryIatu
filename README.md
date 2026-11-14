@@ -193,6 +193,28 @@ Laravel Nova удалена. Админ-панель — **Filament v5** (`/admi
 - Доступ жёстко ограничен: `User::canAccessPanel()` возвращает `is_admin`;
   проверено тестами (`AdminPanelTest`): обычный пользователь получает 403.
 
+## Безопасность
+
+`App\Http\Middleware\SecurityHeaders` добавляет к каждому ответу `X-Content-Type-Options: nosniff`,
+`X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin` и
+`Permissions-Policy` (камера, микрофон и геолокация выключены).
+
+Для SPA дополнительно ставится `Content-Security-Policy`:
+
+- `script-src 'self' 'nonce-...'` — свои скрипты и inline-скрипт темы, которому выдаётся
+  nonce в `resources/views/app.blade.php`;
+- `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com` — emotion вставляет
+  inline-стили, плюс таблица стилей Roboto/Material Icons;
+- `font-src 'self' https://fonts.gstatic.com`, `img-src 'self' data: blob:`;
+- `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`.
+
+CSP не ставится для `/admin` и `/livewire` (Filament и Alpine исполняют inline-скрипты и
+eval) и в локальной разработке (Vite dev-сервер и HMR работают с другого origin).
+
+`Strict-Transport-Security: max-age=31536000; includeSubDomains` отдаётся только когда запрос
+пришёл по HTTPS. За reverse-proxy включите доверие к нему (`TrustProxies`) или задайте HSTS
+на самом прокси — иначе Laravel считает соединение HTTP и заголовок не добавит.
+
 ## Задача
 
 Электронная библиотека — система, предназначенная для обеспечения учебного процесса необходимой

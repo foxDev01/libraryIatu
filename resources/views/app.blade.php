@@ -9,7 +9,7 @@
         <meta name="theme-color" content="#eef2f9" media="(prefers-color-scheme: light)">
         <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
 
-        <script>
+        <script nonce="{{ Vite::cspNonce() }}">
             // Apply the stored/system theme before the first paint, so the page
             // does not flash light when the user prefers the dark palette.
             (function () {

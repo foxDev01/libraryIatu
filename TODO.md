@@ -101,8 +101,16 @@
 
 ## Технический долг
 
-- [ ] Заголовки безопасности при деплое: CSP для SPA (emotion вставляет inline-стили),
-      `X-Frame-Options`, HSTS на reverse-proxy.
+- [x] **Заголовки безопасности** — готово
+  - `SecurityHeaders` на все ответы: `X-Content-Type-Options`, `X-Frame-Options: DENY`,
+    `Referrer-Policy`, `Permissions-Policy`.
+  - CSP для SPA: `script-src 'self'` + nonce для inline-скрипта темы, `style-src` с
+    `unsafe-inline` (emotion) и Google Fonts, `font-src` на `fonts.gstatic.com`,
+    `frame-ancestors 'none'`, `object-src 'none'`. Не ставится для `/admin`, `/livewire`
+    и в локальной разработке.
+  - HSTS (`max-age=31536000; includeSubDomains`) — только на HTTPS-запросах; за
+    reverse-proxy нужен `TrustProxies` или HSTS на самом прокси.
+  - Тесты: `SecurityHeadersTest` — заголовки SPA, HSTS только по HTTPS, админка без CSP.
 - [ ] Следить за advisories зависимостей (`composer audit`, `npm audit`): в Filament 4.x были
       уязвимости, используем свежую 5.11+. В dev-цепочке ESLint висят moderate-предупреждения
       `minimatch` (<11), их исправление ждёт поддержки ESLint 10 в плагинах (`eslint-plugin-react`,
