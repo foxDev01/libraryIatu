@@ -89,6 +89,11 @@ vendor/bin/pint        # авто-форматирование PHP
 php artisan route:list
 ```
 
+## Деплой
+
+Production-чек-лист — переменные окружения, nginx/PHP-FPM, права на каталоги, кеши,
+WAL и cron-бэкапы базы вместе с файлами книг: [docs/DEPLOY.md](docs/DEPLOY.md).
+
 ## API
 
 Все изменения данных выполняются через `POST`, `PUT` и `DELETE`; GET-запросы ничего не меняют.

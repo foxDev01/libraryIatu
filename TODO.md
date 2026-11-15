@@ -118,17 +118,25 @@
 - [ ] Тестовый аккаунт `test@example.com` сейчас ещё и админ — при настройке production
       завести отдельного админа и забрать права у тестового.
 - [ ] После свежего клона не забыть `git config core.hooksPath .githooks`.
-- [ ] Бэкапы не только базы, но и `storage/app/private/books` — файлы книг нигде, кроме сервера,
-      не хранятся (в git они не попадают намеренно).
+- [x] **SQLite в WAL-режиме и бэкапы** — готово
+  - В `config/database.php` для SQLite включены `journal_mode=wal` и `busy_timeout=5000`:
+    чтение не блокируется записью, а соединение ждёт блокировку вместо `database is locked`.
+    Проверено на локальной базе: `PRAGMA journal_mode` → `wal`.
+  - Регламент бэкапов — в [docs/DEPLOY.md](docs/DEPLOY.md): ежедневный cron делает
+    `sqlite3 .backup` (согласованный снимок) и `tar` по `storage/app/private`, хранит
+    копии 30 дней, там же команды восстановления. Копировать файл БД через `cp` при WAL нельзя.
 
 ## Эксплуатация / деплой
+
+Пошаговый чек-лист (nginx, права, кеши, SMTP, бэкапы) — в [docs/DEPLOY.md](docs/DEPLOY.md);
+пункты ниже — что осталось сделать на самом сервере.
 
 - [ ] Production-окружение: PHP-FPM + nginx (или другой хостинг), `APP_ENV=production`,
       `APP_DEBUG=false`, HTTPS, `SANCTUM_STATEFUL_DOMAINS` = домен сайта.
 - [ ] Реальный SMTP для писем восстановления пароля: `MAIL_MAILER=smtp`, `MAIL_HOST`, `MAIL_PORT`,
       `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS` и совпадающий `APP_URL`
       (иначе ссылки в письмах будут вести на localhost).
-- [ ] Кеши: `php artisan config:cache route:cache view:cache` + `php artisan filament:optimize`.
-- [ ] SQLite в WAL-режиме и регламент бэкапов файла БД (cron-копирование).
+- [ ] Кеши: `php artisan config:cache route:cache view:cache` + `php artisan filament:optimize`
+      (команды продублированы в чек-листе).
 - [ ] Передача `libraryiatu.sql` между машинами только вручную (файл с персональными данными,
       в репозиторий не попадает, и по почте такие файлы пересылать тоже нельзя).

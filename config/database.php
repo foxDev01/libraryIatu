@@ -38,8 +38,11 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
+            // WAL даёт параллельное чтение во время записи; busy_timeout заставляет
+            // соединение ждать блокировку, а не падать с "database is locked".
+            // Для :memory: (тесты) journal_mode остаётся memory — SQLite игнорирует WAL.
+            'busy_timeout' => 5000,
+            'journal_mode' => 'wal',
             'synchronous' => null,
             'transaction_mode' => 'DEFERRED',
         ],
