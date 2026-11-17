@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Доверяем только хосту из APP_URL и его поддоменам. Иначе подменённый
+        // заголовок Host попадает в ссылки писем (например, сброса пароля).
+        $middleware->trustHosts();
         $middleware->statefulApi();
         $middleware->append(SecurityHeaders::class);
     })

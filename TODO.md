@@ -111,10 +111,17 @@
   - HSTS (`max-age=31536000; includeSubDomains`) — только на HTTPS-запросах; за
     reverse-proxy нужен `TrustProxies` или HSTS на самом прокси.
   - Тесты: `SecurityHeadersTest` — заголовки SPA, HSTS только по HTTPS, админка без CSP.
-- [ ] Следить за advisories зависимостей (`composer audit`, `npm audit`): в Filament 4.x были
-      уязвимости, используем свежую 5.11+. В dev-цепочке ESLint висят moderate-предупреждения
-      `minimatch` (<11), их исправление ждёт поддержки ESLint 10 в плагинах (`eslint-plugin-react`,
-      `eslint-plugin-react-refresh`, `typescript-eslint`); на прод-сборку это не влияет.
+- [x] **Доверенные хосты** — готово
+  - `$middleware->trustHosts()` в `bootstrap/app.php`: доверенный хост берётся из `APP_URL`
+    вместе с поддоменами, запрос с чужим `Host` получает `400`.
+  - Это закрывает подмену домена в ссылке сброса пароля (письмо строится через `url()`).
+  - Тест `TrustedHostsTest`: в эмуляции production запрос с чужим хостом отклоняется и письмо
+    не формируется, а запрос на хост из `APP_URL` проходит и даёт ссылку на свой домен.
+- [ ] Следить за advisories зависимостей (`composer audit`, `npm audit`): Laravel и Symfony
+      обновлены (13.42.0 / 8.1.11), `composer audit` чист. В dev-цепочке ESLint висят
+      moderate-предупреждения `minimatch` (<11), их исправление ждёт поддержки ESLint 10
+      в плагинах (`eslint-plugin-react`, `eslint-plugin-react-refresh`, `typescript-eslint`);
+      на прод-сборку это не влияет.
 - [ ] Тестовый аккаунт `test@example.com` сейчас ещё и админ — при настройке production
       завести отдельного админа и забрать права у тестового.
 - [ ] После свежего клона не забыть `git config core.hooksPath .githooks`.
